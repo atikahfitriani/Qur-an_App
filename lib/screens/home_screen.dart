@@ -6,12 +6,38 @@ import 'package:quran_app/tabs/hijb_tab.dart';
 import 'package:quran_app/tabs/page_tab.dart';
 import 'package:quran_app/tabs/para_tab.dart';
 import 'package:quran_app/tabs/surah_tab.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
   @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  String? name;
+
+  Future<void> _getLastSurah() async {
+    final prefs = await SharedPreferences.getInstance();
+    final nama = prefs.getString("namaSurah");
+    print(nama);
+    if (nama != null) {
+      setState(() {
+        name = nama;
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    _getLastSurah();
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    print(name);
     return Scaffold(
       backgroundColor: background,
       appBar: _appBar(),
@@ -55,9 +81,9 @@ class HomeScreen extends StatelessWidget {
         indicatorWeight: 3,
         tabs: [
           _tabItem(label: "Surah"),
-          _tabItem(label: "Para"),
-          _tabItem(label: "Page"),
-          _tabItem(label: "Hijb"),
+          // _tabItem(label: "Para"),
+          // _tabItem(label: "Page"),
+          // _tabItem(label: "Hijb"),
         ]);
   }
 
@@ -142,7 +168,7 @@ class HomeScreen extends StatelessWidget {
                 height: 20,
               ),
               Text(
-                'Al-Fatihah',
+                name == null ? '-' : name!,
                 style: GoogleFonts.poppins(
                     color: Colors.white,
                     fontWeight: FontWeight.w600,

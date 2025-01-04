@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:quran_app/models/surah.dart';
 import 'package:quran_app/screens/detail_screen.dart';
 import 'package:quran_app/screens/globals.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SurahTab extends StatelessWidget {
   const SurahTab({super.key});
@@ -35,7 +36,10 @@ class SurahTab extends StatelessWidget {
   Widget _surahItem({required Surah surah, required BuildContext context}) =>
       GestureDetector(
         behavior: HitTestBehavior.opaque,
-        onTap: () {
+        onTap: () async {
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          prefs.setString("namaSurah", surah.namaLatin);
+
           Navigator.of(context).push(MaterialPageRoute(
               builder: (context) => DetailScreen(
                     noSurat: surah.nomor,
