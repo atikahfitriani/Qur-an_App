@@ -7,14 +7,20 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:quran_app/models/ayat.dart';
 import 'package:quran_app/models/surah.dart';
 import 'package:quran_app/screens/globals.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-
-class DetailScreen extends StatelessWidget {
+class DetailScreen extends StatefulWidget {
   final int noSurat;
+
   const DetailScreen({super.key, required this.noSurat});
 
+  @override
+  State<DetailScreen> createState() => _DetailScreenState();
+}
+
+class _DetailScreenState extends State<DetailScreen> {
   Future<Surah> _getDetailSurah() async {
-    var data = await Dio().get("https://equran.id/api/surat/$noSurat");
+    var data = await Dio().get("https://equran.id/api/surat/${widget.noSurat}");
     return Surah.fromJson(json.decode(data.toString()));
   }
 
@@ -44,8 +50,8 @@ class DetailScreen extends StatelessWidget {
                 child: ListView.separated(
                   itemBuilder: (context, index) => _ayatItem(
                       ayat: surah.ayat!
-                          .elementAt(index + (noSurat == 1 ? 1 : 0))),
-                  itemCount: surah.jumlahAyat + (noSurat == 1 ? -1 : 0),
+                          .elementAt(index + (widget.noSurat == 1 ? 1 : 0))),
+                  itemCount: surah.jumlahAyat + (widget.noSurat == 1 ? -1 : 0),
                   separatorBuilder: (context, index) => Container(),
                 ),
               ),
@@ -79,23 +85,30 @@ class DetailScreen extends StatelessWidget {
                     )),
                   ),
                   const Spacer(),
-                  const Icon(
-                    Icons.share_outlined,
-                    color: Colors.white,
-                  ),
+                  // const Icon(
+                  //   Icons.share_outlined,
+                  //   color: Colors.white,
+                  // ),
+                  // const SizedBox(
+                  //   width: 16,
+                  // ),
+                  // const Icon(
+                  //   Icons.play_arrow_outlined,
+                  //   color: Colors.white,
+                  // ),
                   const SizedBox(
                     width: 16,
                   ),
-                  const Icon(
-                    Icons.play_arrow_outlined,
-                    color: Colors.white,
-                  ),
-                  const SizedBox(
-                    width: 16,
-                  ),
-                  const Icon(
-                    Icons.bookmark_outline,
-                    color: Colors.white,
+                  GestureDetector(
+                    onTap: () async {
+                      SharedPreferences prefs =
+                          await SharedPreferences.getInstance();
+                      prefs.setString("ayatSurah", ayat.nomor.toString());
+                    },
+                    child: const Icon(
+                      Icons.bookmark_outline,
+                      color: Colors.white,
+                    ),
                   ),
                 ],
               ),

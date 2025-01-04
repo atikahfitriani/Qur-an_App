@@ -17,14 +17,22 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   String? name;
+  String? ayats;
 
   Future<void> _getLastSurah() async {
     final prefs = await SharedPreferences.getInstance();
     final nama = prefs.getString("namaSurah");
+    final ayat = prefs.getString("ayatSurah");
     print(nama);
+    print(ayat);
     if (nama != null) {
       setState(() {
         name = nama;
+      });
+    }
+    if (ayat != null) {
+      setState(() {
+        ayats = ayat;
       });
     }
   }
@@ -178,10 +186,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 height: 4,
               ),
               Text(
-                'Ayat No: 1',
+                ayats == null ? '-' : ayats!,
                 style: GoogleFonts.poppins(
-                  color: Colors.white,
-                ),
+                    color: Colors.white,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 18),
               ),
             ],
           ),
@@ -220,9 +229,6 @@ class _HomeScreenState extends State<HomeScreen> {
         showUnselectedLabels: false,
         items: [
           _bottomBarItem(icon: "assets/svgs/quran-icon.svg", label: "Quran"),
-          _bottomBarItem(icon: "assets/svgs/lamp-icon.svg", label: "Tips"),
-          _bottomBarItem(icon: "assets/svgs/pray-icon.svg", label: "Prayer"),
-          _bottomBarItem(icon: "assets/svgs/doa-icon.svg", label: "Doa"),
           _bottomBarItem(
               icon: "assets/svgs/bookmark-icon.svg", label: "Bookmark"),
         ],
