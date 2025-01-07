@@ -1,5 +1,5 @@
 # quran_app
-
+Tugas UAS Mobille Programing menggunakan FLutter
 A new Flutter project.
 
 ## Getting Started
